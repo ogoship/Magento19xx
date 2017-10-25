@@ -1,0 +1,56 @@
+<div class="content-header">
+	<table cellspacing="0">
+		<tbody>
+			<tr>
+				<td style="width: 50%;"><h3 class="icon-head head-upcoming">Export Ogoship</h3></td>
+				<td class="a-right">&nbsp;</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="entry-edit">
+	<table cellspacing="0" class="data" style="width: 50%;">
+		<tbody>
+			<tr>
+				<td>			
+					<form action="" method="post" id="export_product_form" name="export_product_form">
+						<input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key">
+						<input type="hidden" value="send_products" name="method_action">
+						<fieldset id="my-fieldset">
+							<table cellspacing="0" class="data" style="width: 100%;">
+								<tr>
+									<td class="label">
+										<?php echo $this->__('Send Products to Ogoship')?>
+									</td>
+									<td class="button" class="a-right">
+										<button type="submit" class="button"><?php echo $this->__('Send'); ?></button>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</form>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<form action="" method="post" id="export_order_form" name="export_order_form">
+						<input type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" name="form_key">
+						<input type="hidden" value="update_changes" name="method_action">
+						<fieldset id="my-fieldset">
+							<table cellspacing="0" class="data" style="width: 100%;">
+								<tr>
+									<td class="label">
+										<?php echo $this->__('Update Latest changes from Ogoship')?>
+									</td>
+									<td class="button" class="a-right">
+										<button type="submit" class="button"><?php echo $this->__('Update'); ?></button>
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</form>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

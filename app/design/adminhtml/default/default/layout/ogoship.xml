@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <ogoship_adminhtml_ogoship_index>
+        <reference name="content">
+            <block type="adminhtml/template" name="ogoship" template="ogoship/ogoshipbackend.phtml" />
+        </reference>
+    </ogoship_adminhtml_ogoship_index>
+</layout>

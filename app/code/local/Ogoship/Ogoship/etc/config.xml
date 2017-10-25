@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @category   Ogoship
+ * @package    Ogoship_Ogoship
+ * @author     ModuleCreator
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+ -->
+<config>
+    <modules>
+        <Ogoship_Ogoship>
+            <version>0.1.0</version>
+        </Ogoship_Ogoship>
+    </modules>
+    <admin>
+        <routers>
+			<ogoship>
+				<use>admin</use>
+				<args>
+					<module>Ogoship_Ogoship</module>
+					<frontName>ogoship</frontName>
+				</args>
+			</ogoship>
+        </routers>
+    </admin>
+    <adminhtml>
+		<menu>
+			<ogoship module="ogoship">
+				<title>Ogoship</title>
+				<sort_order>100</sort_order>               
+				<children>
+					<items module="ogoship">
+						<title>Export Ogoship</title>
+						<sort_order>100</sort_order>
+						<action>ogoship/adminhtml_ogoship</action>
+					</items>
+				</children>
+			</ogoship>
+		</menu>
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<Ogoship_Ogoship>
+							<title>Export Ogoship</title>
+							<sort_order>10</sort_order>
+						</Ogoship_Ogoship>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<ogoship>
+					<file>ogoship.xml</file>
+				</ogoship>
+			</updates>
+		</layout>
+		<events>
+        <controller_action_layout_render_before_adminhtml_sales_order_view>
+            <observers>
+                <ctp_tcs>
+                    <class>ogoship/adminhtml_observer</class>
+                    <method>sendOgoship</method>
+                </ctp_tcs>
+            </observers>
+        </controller_action_layout_render_before_adminhtml_sales_order_view>
+    </events>
+    </adminhtml>   
+    <global>
+        <models>
+            <ogoship>
+                <class>Ogoship_Ogoship_Model</class>
+            </ogoship>            
+        </models>
+		<resources>
+            <ogoship_setup>
+                <setup>
+                    <module>Ogoship_Ogoship</module>
+                    <class>Mage_Eav_Model_Entity_Setup</class>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </ogoship_setup>
+            <ogoship_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </ogoship_write>
+            <ogoship_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </ogoship_read>
+        </resources>
+        <blocks>
+            <ogoship>
+                <class>Ogoship_Ogoship_Block</class>
+            </ogoship>
+        </blocks>
+        <helpers>
+            <ogoship>
+                <class>Ogoship_Ogoship_Helper</class>
+            </ogoship>
+        </helpers>
+    </global>
+	<crontab>
+        <jobs>            
+			<ogoship_productorderupdate>
+                <schedule><cron_expr>0 0 * * *</cron_expr></schedule>
+                <run><model>ogoship/cron::ProductOrderUpdate</model></run>
+            </ogoship_productorderupdate>
+        </jobs>
+    </crontab>
+</config>
