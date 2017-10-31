@@ -109,6 +109,8 @@ class Ogoship_Ogoship_Adminhtml_OgoshipController extends Mage_Adminhtml_Control
 				    if(empty($export_to_ogoship)){
 					    $order->setOrderLineCode( $index, ($item->getSku()));
 					    $order->setOrderLineQuantity( $index, intval($item->getQtyOrdered()));
+					$order->setOrderLinePrice( $index, $item->getPrice());
+
 					    $index++;
 				    }
 				}

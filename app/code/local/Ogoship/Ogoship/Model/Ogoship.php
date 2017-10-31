@@ -27,7 +27,7 @@ class Ogoship_Ogoship_Model_Ogoship extends Mage_Core_Model_Abstract
 		
 		$_productCollection = Mage::getModel('catalog/product')->getCollection()->addAttributeToSelect('*')->load();
 		foreach ($_productCollection as $product){
-			$currency_iso_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+			$currency_iso_code = Mage::app()->getStore()->getBaseCurrencyCode();
 			$_product = Mage::getModel('catalog/product')->load($product->getId());
 			$export_to_ogoship = $_product->getExportToOgoship();
 			if(empty($export_to_ogoship)){
