@@ -67,32 +67,61 @@ class Ogoship_Ogoship_Model_Ogoship extends Mage_Core_Model_Abstract
 				$order = Mage::getModel('sales/order')->load($latestOrder->getReference());
 				switch ( $latestOrder->getStatus() ) {	
 					 case  'SHIPPED': 
-						$order->setState(Mage_Sales_Model_Order::STATE_COMPLETE, true);
-						$order->setStatus(Mage_Sales_Model_Order::STATE_COMPLETE);
-						$order->addStatusToHistory($order->getStatus(), 'Ogoship change of status to SHIPPED.', false);
-						$order->save();
+						//$order->setState(Mage_Sales_Model_Order::STATE_COMPLETE, true);
+						if($order->getState() != Mage_Sales_Model_Order::STATE_COMPLETE)
+						{
+							if($order->canShip())
+							{
+								if($latestOrder->getTrackingNumber() != null)
+								{
+									Mage::log($latestOrder->getTrackingNumber());
+									foreach(explode(',', $latestOrder->getTrackingNumber()) as $track)
+									{
+										$shipmentApi = Mage::getModel('sales/order_shipment_api');
+										$carriers = $shipmentApi->getCarriers($order->getIncrementId());
+										//Mage::log($order->getShippingMethod() . " " . $order->getShippingDescription());
+										$type = $latestOrder->getShipping();
+										$type = str_replace('()', $type);
+										$shipment = $shipmentApi->create($order->getIncrementId(), array(), '' , false, 0);
+										if(isset($carriers[$type]))
+										{
+											$shipmentApi->addTrack($shipment, $type, $carriers[$type], $track);
+										} else {
+											$shipmentApi->addTrack($shipment, 'custom', $carriers['custom'], $track);
+										}
+									}
+									// send mail
+									//$shipmentApi->sendInfo($shipment);
+								}
+							}
+							$order->setStatus(Mage_Sales_Model_Order::STATE_COMPLETE);
+							$order->addStatusToHistory($order->getStatus(), 'Ogoship change of status to SHIPPED.', false);
+							$order->save();
+						}
                         break;
                     case  'CANCELLED':
-						$order->setState(Mage_Sales_Model_Order::STATE_CANCELED, true);
-						$order->setStatus(Mage_Sales_Model_Order::STATE_CANCELED);
+						//$order->setState(Mage_Sales_Model_Order::STATE_CANCELED, true);
+						//$order->setStatus(Mage_Sales_Model_Order::STATE_CANCELED);
 						$order->addStatusToHistory($order->getStatus(), 'Ogoship change of status to CANCELLED.', false);
 						$order->save();
                         break;
                     case  'COLLECTING':
-						$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true);
-						$order->setStatus(Mage_Sales_Model_Order::STATE_PROCESSING);
+						//$order->setState(Mage_Sales_Model_Order::STATE_PROCESSING, true);
+						//$order->setStatus(Mage_Sales_Model_Order::STATE_PROCESSING);
 						$order->addStatusToHistory($order->getStatus(), 'Ogoship change of status to COLLECTING.', false);
 						$order->save();
                         break;
                     case  'PENDING':
-						$order->setState(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT, true);
-						$order->setStatus(Mage_Sales_Model_Order::STATE_PENDING_PAYMENT);
+						//$order->setState(Mage_Sales_Model_Order::STATE_PENDING, true);
+						//$order->setStatus(Mage_Sales_Model_Order::STATE_PENDING);
 						$order->addStatusToHistory($order->getStatus(), 'Ogoship change of status to PENDING.', false);
 						$order->save();
                         break;
-                    case  'RESERVED':
-						$order->setState(Mage_Sales_Model_Order::STATE_COMPLETE, true);
-						$order->setStatus(Mage_Sales_Model_Order::STATE_COMPLETE);
+					case  'RESERVED':
+						if($order->canHold() == true){
+							//$order->setState(Mage_Sales_Model_Order::STATE_HOLDED, true);
+							$order->setStatus(Mage_Sales_Model_Order::STATE_HOLDED);
+						}
 						$order->addStatusToHistory($order->getStatus(), 'Ogoship change of status to RESERVED.', false);
 						$order->save();
                         break;

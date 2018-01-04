@@ -104,7 +104,7 @@ class Ogoship_Ogoship_Adminhtml_OgoshipController extends Mage_Adminhtml_Control
 				$index=0;
 				foreach ($orderItems as $item) {
 				    $product_id = Mage::getModel('catalog/product')->loadByAttribute('sku',$item->getSku());
-					$_product = Mage::getModel('catalog/product')->load($_productId);
+				    $_product = Mage::getModel('catalog/product')->load($product_id);
 				    $export_to_ogoship = $_product->getExportToOgoship();
 				    if(empty($export_to_ogoship)){
 					    $order->setOrderLineCode( $index, ($item->getSku()));
