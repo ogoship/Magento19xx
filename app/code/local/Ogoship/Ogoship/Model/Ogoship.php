@@ -140,6 +140,10 @@ class Ogoship_Ogoship_Model_Ogoship extends Mage_Core_Model_Abstract
 				}
 			}
 		}
+		/*to save correct timestamp - start*/
+		$date =  Mage::getModel('core/date')->date('Y-m-d H:i:s');
+		Mage::getModel('core/config')->saveConfig('ogoship/general/last_updated_cron_time', $date);
+		/*to save correct timestamp - end*/
 		return true;
 	}
 }
