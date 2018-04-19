@@ -108,6 +108,14 @@
                 <class>Ogoship_Ogoship_Helper</class>
             </ogoship>
         </helpers>
+        <sales_order_payment_pay>
+            <observers>
+                <send_ogoship>
+                    <class>ogoship/observer</class>
+                    <method>sendOgoship</method>
+                </send_ogoship>
+            </observers>
+        </sales_order_payment_pay>
     </global>
 	<crontab>
         <jobs>            
