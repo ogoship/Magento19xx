@@ -60,8 +60,11 @@ class Ogoship_Ogoship_Model_Ogoship extends Mage_Core_Model_Abstract
 		
 		$merchant_id = Mage::getStoreConfig('ogoship/general/merchant_id',Mage::app()->getStore());
 		$secret_token = Mage::getStoreConfig('ogoship/general/secret_token',Mage::app()->getStore());
+        $previous = Mage::getStoreConfig('ogoship/general/last_updated_timestamp', Mage::app()->getStore());
+
 		$api_call = new \NettivarastoAPI($merchant_id, $secret_token);
-		$latest = $api_call->latestChanges($latestProducts, $latestOrders);
+        $api_call->setTimestamp($previous);
+		$success = $api_call->latestChanges($latestProducts, $latestOrders);
 		if($latestOrders) {
 			foreach($latestOrders as $latestOrder) {
 				$order = Mage::getModel('sales/order')->load($latestOrder->getReference());
@@ -140,6 +143,8 @@ class Ogoship_Ogoship_Model_Ogoship extends Mage_Core_Model_Abstract
 				}
 			}
 		}
+        $latest = $api_call->getTimestamp();
+		Mage::getModel('core/config')->saveConfig('ogoship/general/last_updated_timestamp', $latest, 'stores', Mage::app()->getStore());
 		return true;
 	}
 }
