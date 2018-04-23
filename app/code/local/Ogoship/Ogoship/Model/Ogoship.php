@@ -25,12 +25,14 @@ class Ogoship_Ogoship_Model_Ogoship extends Mage_Core_Model_Abstract
 	
 	public function export_all_products(){
 		
+		$NV_products = array();
 		$_productCollection = Mage::getModel('catalog/product')->getCollection()->addAttributeToSelect('*')->load();
 		foreach ($_productCollection as $product){
 			$currency_iso_code = Mage::app()->getStore()->getBaseCurrencyCode();
 			$_product = Mage::getModel('catalog/product')->load($product->getId());
-			$export_to_ogoship = $_product->getExportToOgoship();
-			if(empty($export_to_ogoship)){
+            //$export_to_ogoship = $_product->getExportToOgoship();
+            $export_to_ogoship = $_product->getAttributeText('export_to_ogoship');
+			if($export_to_ogoship == "Yes"){
 			    $imageUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product' . $_product->getImage();
 			    $product_array = array(
 					'Code' => $_product->getSku(),

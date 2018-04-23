@@ -1,10 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pcs166
- * Date: 4/19/2018
- * Time: 10:04 AM
- */
+
+$lib_internal = Mage::getBaseDir('lib');      
+$lib_file = $lib_internal.'/ogoship/API.php';
+require_once($lib_file);
 
 Class Ogoship_Ogoship_Model_Observer
 {
@@ -26,8 +24,8 @@ Class Ogoship_Ogoship_Model_Observer
                 if(!empty($_ogoship_shipping_code)) {
                     $nettivarasto_shipping_method = $_ogoship_shipping_code;
                 } else {
-                    Mage::getSingleton('adminhtml/session')->addError($this->__('Order Shipping method not enabled in settings'));
-                    $this->_redirect('adminhtml/sales_order/view', array('order_id' => $_order->getId()));
+//                    Mage::getSingleton('adminhtml/session')->addError($this->__('Order Shipping method not enabled in settings'));
+//                    $this->_redirect('adminhtml/sales_order/view', array('order_id' => $_order->getId()));
                 }
             }
             $orderItems = $_order->getAllItems();
@@ -36,8 +34,9 @@ Class Ogoship_Ogoship_Model_Observer
             foreach ($orderItems as $item) {
                 $product_id = Mage::getModel('catalog/product')->loadByAttribute('sku',$item->getSku());
                 $_product = Mage::getModel('catalog/product')->load($product_id);
-                $export_to_ogoship = $_product->getExportToOgoship();
-                if(empty($export_to_ogoship)){
+                //$export_to_ogoship = $_product->getExportToOgoship();
+                $export_to_ogoship = $_product->getAttributeText('export_to_ogoship');
+                if($export_to_ogoship == "Yes"){
                     $order->setOrderLineCode( $index, ($item->getSku()));
                     $order->setOrderLineQuantity( $index, intval($item->getQtyOrdered()));
                     $order->setOrderLinePrice( $index, $item->getPrice());
@@ -64,11 +63,12 @@ Class Ogoship_Ogoship_Model_Observer
             }
         }
         catch (Mage_Core_Exception $e) {
-            Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
+            Mage::logException($e);
+//            Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
         }
         catch (Exception $e) {
-            Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             Mage::logException($e);
+//            Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
         }
     }
 }

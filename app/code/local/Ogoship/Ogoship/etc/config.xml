@@ -108,20 +108,22 @@
                 <class>Ogoship_Ogoship_Helper</class>
             </ogoship>
         </helpers>
-        <sales_order_payment_pay>
+        <events>
+        <sales_order_invoice_pay>
             <observers>
                 <send_ogoship>
                     <class>ogoship/observer</class>
                     <method>sendOgoship</method>
                 </send_ogoship>
             </observers>
-        </sales_order_payment_pay>
+        </sales_order_invoice_pay>
+        </events>
     </global>
 	<crontab>
         <jobs>            
 			<ogoship_productorderupdate>
                 <schedule><cron_expr>0 0 * * *</cron_expr></schedule>
-                <run><model>ogoship/cron::ProductOrderUpdate</model></run>
+                <run><model>ogoship/ogoship::ProductOrderUpdate</model></run>
             </ogoship_productorderupdate>
         </jobs>
     </crontab>
