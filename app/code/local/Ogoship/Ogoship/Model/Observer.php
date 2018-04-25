@@ -26,6 +26,7 @@ Class Ogoship_Ogoship_Model_Observer
                 } else {
 //                    Mage::getSingleton('adminhtml/session')->addError($this->__('Order Shipping method not enabled in settings'));
 //                    $this->_redirect('adminhtml/sales_order/view', array('order_id' => $_order->getId()));
+                    return;
                 }
             }
             $orderItems = $_order->getAllItems();
@@ -34,9 +35,9 @@ Class Ogoship_Ogoship_Model_Observer
             foreach ($orderItems as $item) {
                 $product_id = Mage::getModel('catalog/product')->loadByAttribute('sku',$item->getSku());
                 $_product = Mage::getModel('catalog/product')->load($product_id);
-                //$export_to_ogoship = $_product->getExportToOgoship();
-                $export_to_ogoship = $_product->getAttributeText('export_to_ogoship');
-                if($export_to_ogoship == "Yes"){
+                $export_to_ogoship = $_product->getExportToOgoship();
+                //$export_to_ogoship = $_product->getAttributeText('export_to_ogoship');
+                if(empty($export_to_ogoship == "Yes")){
                     $order->setOrderLineCode( $index, ($item->getSku()));
                     $order->setOrderLineQuantity( $index, intval($item->getQtyOrdered()));
                     $order->setOrderLinePrice( $index, $item->getPrice());
@@ -56,10 +57,10 @@ Class Ogoship_Ogoship_Model_Observer
             $order->setCustomerZip($shippingAddress->getPostcode());
             $order->setShipping($nettivarasto_shipping_method);
             if ($order->save()) {
-                Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Order successfully transferred to Ogoship.'));
+                //Mage::getSingleton('adminhtml/session')->addSuccess($this->__('Order successfully transferred to Ogoship.'));
             } else {
-                $error_warning = 'Error - Ogoship API'. $api_call->getLastError();
-                Mage::getSingleton('adminhtml/session')->addError($error_warning);
+                Mage::log('Error - Ogoship API'. $api_call->getLastError());
+                //Mage::getSingleton('adminhtml/session')->addError($error_warning);
             }
         }
         catch (Mage_Core_Exception $e) {
